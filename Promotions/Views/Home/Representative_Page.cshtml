@@ -1,0 +1,119 @@
+﻿@model ConfigPromotionViewModel
+
+@{
+    ViewData["Title"] = "Representative_Page";
+}
+
+<div class="container">
+    <div id="signupbox" style=" margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="panel-title">Manually assign</div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <form id="AjaxForm" class="form-horizontal" method="post">
+                <div id="div_id_name" class="form-group required">
+                    <label asp-for="strPromotion.CustomerName" class="control-label col-md-4"></label>
+                    <div class="controls col-md-8 " style="margin-bottom: 10px">
+                        <input asp-for="strPromotion.CustomerName" id="CustomerName" class="form-control input-sm" placeholder="" required autofocus />
+                        <span asp-validation-for="strPromotion.CustomerName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div id="div_id_numberprizes" class="form-group required">
+                    <label asp-for="strPromotion.NumberPrizes" class="control-label col-md-4"></label>
+                    <div class="controls col-md-8 " style="margin-bottom: 10px">
+                        <input asp-for="strPromotion.NumberPrizes" id="NumberPrizes" class="form-control input-sm" placeholder="" required />
+                        <span asp-validation-for="strPromotion.NumberPrizes" class="text-danger"></span>
+                    </div>
+                </div>
+                <div id="div_id_totalprize" class="form-group required">
+                    <label asp-for="strPromotion.TotalPrize" class="control-label col-md-4"></label>
+                    <div class="controls col-md-8 " style="margin-bottom: 10px">
+                        <input asp-for="strPromotion.TotalPrize" id="TotalPrize" class="form-control input-sm" placeholder="" required />
+                        <span asp-validation-for="strPromotion.TotalPrize" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="aab controls col-md-4 "></div>
+                    <div class="controls col-md-8 ">
+                        <img id="AjaxLoader" alt="Enviando ..." style="display:none" src="~/Images/loading.gif" />
+                        <button id="SubmitBtn" type="submit" class="btn btn-primary  btn btn-info">Assign</button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-9">
+                        <div id="ErrorMessage" class="alert alert-danger" style="display:none" role="alert">
+                            Error in the assigned data!
+                        </div>
+                        <div id="ExitoMessage" class="alert alert-success" style="display:none" role="alert">
+                            Datos recibidos correctamente!
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+    $(function () {
+            $("#AjaxForm").submit(function (e) {
+                e.preventDefault();
+
+                // Mostramos el Ajax Loader
+                $("#AjaxLoader").show("fast");
+
+                // Deshabilitamos el botón de Submit
+                $("#SubmitBtn").prop("disabled", true);
+
+                $.ajax({
+                    url: "@Url.Action("Assign", "Home")",
+                    data: {
+                            CustomerName: $("#CustomerName").val(),
+                            NumberPrizes: $("#NumberPrizes").val(),
+                            TotalPrize: $("#TotalPrize").val()
+                    },
+                    type: "post"
+                })
+                // Se ejecuta si todo fue bien.
+                .done(function (result) {
+                    if (result != null) {
+
+                        // Limpia el formulario
+                        $("#CustomerName").val("");
+                        $("#NumberPrizes").val("");
+                        $("#TotalPrize").val("");
+
+                        // Escondemos el Ajax Loader
+                        $("#AjaxLoader").hide("slow");
+
+                        // Habilitamos el botón de Submit
+                        $("#SubmitBtn").prop("disabled", false);
+
+                        // Mostramos un mensaje de éxito.
+                        $("#ExitoMessage").show("slow").delay(2000).hide("slow");
+                    }
+                })
+                // Se ejecuta si se produjo un error.
+                .fail(function (xhr, status, error) {
+                    // Mostramos un mensaje de error.
+                    $("#ErrorMessage").show("slow").delay(2000).hide("slow");
+
+                    // Escondemos el Ajax Loader
+                    $("#AjaxLoader").hide("slow");
+
+                    // Habilitamos el botón de Submit
+                    $("#SubmitBtn").prop("disabled", false);
+                });
+            });
+        });
+
+    </script>
+}

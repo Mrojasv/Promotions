@@ -1,0 +1,89 @@
+﻿@model PromotionViewModel
+
+@{
+    ViewData["Title"] = "Promotion Page";
+}
+
+<div class="container">
+    <div class="panel-body">
+        <div id="div_id_name" class="col-md-6 float-md-left">
+            <label asp-for="Name" class="control-label col-md-1"></label>
+            <label class="col-md-3">@Model.Name</label>
+        </div>
+        <div id="div_id_claimedamount" class="col-md-6 float-md-right">
+            <label asp-for="ClaimedAmount" class="control-label col-md-4"></label>
+            <label class="col-md-3">@Model.ClaimedAmount</label>
+        </div>
+    </div>
+    <div class="panel-body" style="overflow-y: scroll; height: 200px">
+        <div class="mid-width wrapItems" style="border:1px solid black; height:100px">
+            <div class="col-md-1" style="border:1px solid black; height:50px; margin: 20px;">
+                <label class="control-label col-md-1">Prize:</label>
+                <label class="control-label col-md-1">350</label>
+            </div>
+            <div id="Test2" class="col-md-1" style="border:1px solid black; height:50px; margin: 20px;">a</div>
+        </div>
+    </div>
+
+</div>
+
+@section scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+    $(function () {
+            $("#AjaxForm").submit(function (e) {
+                e.preventDefault();
+
+                // Mostramos el Ajax Loader
+                $("#AjaxLoader").show("fast");
+
+                // Deshabilitamos el botón de Submit
+                $("#SubmitBtn").prop("disabled", true);
+
+                $.ajax({
+                    url: "@Url.Action("Assign", "Home")",
+                    data: {
+                            CustomerName: $("#CustomerName").val(),
+                            NumberPrizes: $("#NumberPrizes").val(),
+                            TotalPrize: $("#TotalPrize").val()
+                    },
+                    type: "post"
+                })
+                // Se ejecuta si todo fue bien.
+                .done(function (result) {
+                    if (result != null) {
+
+                        // Limpia el formulario
+                        $("#CustomerName").val("");
+                        $("#NumberPrizes").val("");
+                        $("#TotalPrize").val("");
+
+                        // Escondemos el Ajax Loader
+                        $("#AjaxLoader").hide("slow");
+
+                        // Habilitamos el botón de Submit
+                        $("#SubmitBtn").prop("disabled", false);
+
+                        // Mostramos un mensaje de éxito.
+                        $("#ExitoAlert").show("slow").delay(2000).hide("slow");
+                    }
+                })
+                // Se ejecuta si se produjo un error.
+                .fail(function (xhr, status, error) {
+                    // Mostramos un mensaje de error.
+                    $("#ErrorAlert").show("slow").delay(2000).hide("slow");
+
+                    // Escondemos el Ajax Loader
+                    $("#AjaxLoader").hide("slow");
+
+                    // Habilitamos el botón de Submit
+                    $("#SubmitBtn").prop("disabled", false);
+                });
+            });
+        });
+
+    </script>
+}

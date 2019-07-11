@@ -1,0 +1,93 @@
+﻿@model ConfigPromotionViewModel
+
+@{
+    ViewData["Title"] = "Customer_Page";
+}
+
+<div class="container">
+    <div id="signupbox" style=" margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="panel-title">Customer</div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <form id="AjaxForm" class="form-horizontal" method="post">
+                <div id="div_id_name" class="form-group required">
+                    <label asp-for="customer.Name" class="control-label col-md-4"></label>
+                    <div class="controls col-md-8 " style="margin-bottom: 10px">
+                        <input asp-for="customer.Name" id="Name" class="form-control input-sm" placeholder="" required autofocus />
+                        <span asp-validation-for="customer.Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="aab controls col-md-4 "></div>
+                    <div class="controls col-md-8 ">
+                        <button id="SubmitBtn" type="submit" class="btn btn-primary  btn btn-info">Check</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script type="text/javascript">
+
+    $(function () {
+            $("#AjaxForm").submit(function (e) {
+                e.preventDefault();
+
+                // Mostramos el Ajax Loader
+                $("#AjaxLoader").show("fast");
+
+                // Deshabilitamos el botón de Submit
+                $("#SubmitBtn").prop("disabled", true);
+
+                $.ajax({
+                    url: "@Url.Action("Search", "Home")",
+                    data: {
+                            Name: $("#Name").val()
+                    },
+                    type: "post"
+                })
+                // Se ejecuta si todo fue bien.
+                .done(function (result) {
+                    if (result != null) {
+
+                        // Limpia el formulario
+                        $("#Name").val("");
+
+                        // Escondemos el Ajax Loader
+                        $("#AjaxLoader").hide("slow");
+
+                        // Habilitamos el botón de Submit
+                        $("#SubmitBtn").prop("disabled", false);
+
+                        // Mostramos un mensaje de éxito.
+                        $("#ExitoAlert").show("slow").delay(2000).hide("slow");
+                    }
+                })
+                // Se ejecuta si se produjo un error.
+                .fail(function (xhr, status, error) {
+                    // Mostramos un mensaje de error.
+                    $("#ErrorAlert").show("slow").delay(2000).hide("slow");
+
+                    // Escondemos el Ajax Loader
+                    $("#AjaxLoader").hide("slow");
+
+                    // Habilitamos el botón de Submit
+                    $("#SubmitBtn").prop("disabled", false);
+                })
+                // Hacer algo siempre, haya sido exitosa o no.
+                .always(function () {
+
+                });
+            });
+        });
+
+    </script>
+}
