@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using ApplicationData.Models;
 using Microsoft.AspNetCore.Mvc;
 using Promotions.Models;
 
@@ -10,6 +11,9 @@ namespace Promotions.Controllers
 {
     public class HomeController : Controller
     {
+        readonly PromotionContext Context;
+        public HomeController(PromotionContext context) => Context = context;
+
         public IActionResult Representative_Page()
         {
             return View();
@@ -17,6 +21,7 @@ namespace Promotions.Controllers
 
         public IActionResult Customer_Page()
         {
+            var configPromo = Context.ConfigPromotion.ToList();
             return View();
         }
 
@@ -35,7 +40,15 @@ namespace Promotions.Controllers
         {
             if (ModelState.IsValid)
             {
-                //var dd = new IAppPromotion();
+                var configPromo = new ConfigPromotion()
+                {
+                    CustomerName = promotion.CustomerName,
+                    NumberPrizes = promotion.NumberPrizes,
+                    TotalPrize = promotion.TotalPrize
+                };
+
+                Context.Add(configPromo);
+                Context.SaveChanges();
 
                 return this.Ok();
             }
