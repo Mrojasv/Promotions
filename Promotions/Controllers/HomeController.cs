@@ -21,7 +21,7 @@ namespace Promotions.Controllers
 
         public IActionResult Customer_Page()
         {
-            var configPromo = Context.ConfigPromotion.ToList();
+            var configPromo = Context.ConfigPromotions.ToList();
             return View();
         }
 

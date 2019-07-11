@@ -2,6 +2,7 @@
 using ApplicationData.Models.ModelConfiguration;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace ApplicationData.Models
 {
     public class PromotionContext : DbContext
@@ -12,6 +13,6 @@ namespace ApplicationData.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) => modelBuilder.ApplyConfiguration(new PromotionConfiguration());
 
-        public DbSet<ConfigPromotion> ConfigPromotion { get; set; }
+        public DbSet<ConfigPromotion> ConfigPromotions { get; set; }
     }
 }

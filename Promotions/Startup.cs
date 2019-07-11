@@ -28,11 +28,15 @@ namespace Promotions
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-
             //services.AddDbContext<PromotionContext>(
-            //    options => options.UseNpgsql(
-            //        Configuration.GetConnectionString("DefaultConnection")
-            //    ));
+            //                options => options.UseNpgsql(
+            //                    Configuration.GetConnectionString("DefaultConnection")
+            //                ));
+
+            //var connection = @"Server=localhost; Port=5432;Database=EFGetStarted.AspNetCore.NewDb;Trusted_Connection=True;ConnectRetryCount=0";
+            services.AddDbContext<PromotionContext>
+                (options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
